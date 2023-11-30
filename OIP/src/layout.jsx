@@ -1,94 +1,75 @@
-import Stack from "react-bootstrap/Stack"
-import Navbar from "react-bootstrap/Navbar"
-import Nav from "react-bootstrap/Nav"
-import NavDropdown from "react-bootstrap/NavDropdown"
-import Container from "react-bootstrap/Container"
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useUser } from "./lib/contexts";
+import { signOut } from "./api";
+import { useMutation } from "react-query";
+import { Navbar, Dropdown, Button } from "flowbite-react";
+import { PencilIcon, SquaresPlusIcon, ArrowLeftOnRectangleIcon, BookOpenIcon } from "@heroicons/react/24/solid"
 
-import { Link, Outlet, useLocation } from "react-router-dom"
-import { useUser } from "./lib/contexts"
-import { signOut } from './api'
-import { useMutation } from 'react-query'
+export default function Layout() {
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
 
-
-export default function Layout(){
-
-	const { user, setUser } = useUser()
-	const location = useLocation()
-
-  const mutatation = useMutation({
+  const mutation = useMutation({
     mutationFn: () => signOut(),
-    onSuccess: () =>
-      setUser({data: {}, isAuthenticated: false })
-
-  })
+    onSuccess: () => setUser({ data: {}, isAuthenticated: false }),
+  });
 
   return (
-    <Stack direction="vertical">
-      <Navbar expand="lg" className="bg-body-tertiary">
-      	<Container>
-        <Navbar.Brand>
-          <Link to="/">
-            <div>ToggyUniversity</div>
+    <div className="bg-gray-50/40 min-h-screen">
+      <Navbar fluid className="border-b">
+        <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
+          <Link to="/" className="text-lg">
+            Toggy
           </Link>
         </Navbar.Brand>
-        <div className="me-auto"/>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="">
-          <Nav className="">
-          	<Nav.Item className="">
-            <Link to="/" className="nav-link">
-              Home
-            </Link>
-            </Nav.Item>
 
-            <Nav.Item>
-            <Link to="/blogs" className="nav-link">
-              Blogs
-            </Link>
-            </Nav.Item>
+        <div className="flex md:order-2">
+          {!user.isAuthenticated ? (
+            <Button size="sm" onClick={() => navigate("/signin")}>Sign in</Button>
+          ) : (
+            <Dropdown
+              inline
+              label={<div>{`Hi ${user.data?.full_name}`}</div>}
+              id="basic-nav-dropdown"
+              className="justify-content-end"
+            >
+              <Dropdown.Header>
+                <div>{user.data.full_name}</div>
+                <div>{user.data.student_id}</div>
+                <div className="font-medium">{user.data.email}</div>
+              </Dropdown.Header>
+              <Dropdown.Item icon={PencilIcon}>Create blog</Dropdown.Item>
+              <Dropdown.Item icon={BookOpenIcon}>My blogs</Dropdown.Item>
+              {user.data.is_staff && (
+                <Dropdown.Item icon={SquaresPlusIcon}>
+                  <Link to="/admin" className="dropdown-item">
+                    Dashboard
+                  </Link>
+                </Dropdown.Item>
+              )}
+              <Dropdown.Divider />
+              <Dropdown.Item
+                onClick={mutation.mutate}
+                icon={ArrowLeftOnRectangleIcon}
+                >
+                Sign out
+              </Dropdown.Item>
+            </Dropdown>
+          )}
+        </div>
 
-            {!user.isAuthenticated ? (
-              <>
-              	<Nav.Item>
-                <Link to="/signup" className="nav-link">
-                  Sign up
-                </Link>
-                </Nav.Item>
-                <Nav.Item>
-                <Link to="/signin" className="nav-link">
-                  Sign in
-                </Link>
-                </Nav.Item>
-              </>
-            ) : (
-              <NavDropdown title={`Welcome ${user.data?.full_name}`} id="basic-nav-dropdown" className="justify-content-end">
-
-                {
-                	user.data.admin && 
-	                	<NavDropdown.Item>
-	                    <Link to="/admin" className="dropdown-item">
-	                      Dashboard
-	                    </Link>
-	                  </NavDropdown.Item>
-                	
-                }
-
-                <NavDropdown.Item>
-                  <Nav.Item className="dropdown-item" onClick={ mutatation.mutate }>
-                    Sign out
-                  </Nav.Item>
-                </NavDropdown.Item>
-              </NavDropdown>
-            )}
-          </Nav>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="mr-auto ml-0">
+          <Link to="/blogs" className="">
+            <Navbar.Link>Blogs</Navbar.Link>
+          </Link>
         </Navbar.Collapse>
-        </Container>
       </Navbar>
-
-      <Container as="main" sm className="bg-tertiary">
-
-        <Outlet />
-      </Container >
-    </Stack>
+      <div className="max-w-6xl p-2 w mx-auto">
+        <div className="w-full">
+          <Outlet />
+        </div>
+      </div>
+    </div>
   );
 }

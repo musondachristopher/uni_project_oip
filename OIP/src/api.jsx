@@ -1,6 +1,4 @@
-import { v4 as uuid } from "uuid";
-import Cookie from 'js-cookie'
-
+const URL = "http://localhost:8000/"
 
 async function signUp(_data) {
   let res = await fetch(URL + 'authorization/registration/', {
@@ -13,11 +11,7 @@ async function signUp(_data) {
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+  data
 }
 
 async function getMe() {
@@ -58,11 +52,7 @@ async function signIn(_data) {
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+  return data
 }
 
 
@@ -73,34 +63,23 @@ async function signOut() {
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw "Couldnt reach backend"
+  return data
 }
 
-const URL = "http://localhost:8000/"
-async function list(record){
-  let res = await fetch(URL + record, {
+
+async function list(uri){
+  let res = await fetch(URL + uri, {
     method: "GET",
-    
     credentials: "include"
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+  return data
 }
 
-
-async function create(record, _data) {
-  let res = await fetch(URL + record, {
+async function create(uri, _data) {
+  let res = await fetch(URL + uri, {
     method: "POST",
-    
     credentials: "include",
     headers: {
       "Content-Type": "application/json"
@@ -112,23 +91,17 @@ async function create(record, _data) {
   return data
 }
 
-async function get(record, id) {
-  let res = await fetch(URL + record + id , {
+async function get(uri, id) {
+  let res = await fetch(URL + uri + id , {
     method: "GET",
-    
     credentials: "include",
   })
-
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+  return data
 }
 
-async function update(record, id, _data) {
-  let res = await fetch(URL + record, {
+async function update(uri, id, _data) {
+  let res = await fetch(URL + uri + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
@@ -138,15 +111,11 @@ async function update(record, id, _data) {
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+return data
 }
 
-async function remove(record, id) {
-  let res = await fetch(URL + record, {
+async function remove(uri, id) {
+  let res = await fetch(URL + uri + id, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json"
@@ -155,11 +124,7 @@ async function remove(record, id) {
   })
 
   const data = await res.json()
-  if(res.ok)
-    return data
-
-  else
-    throw data
+return data
 }
 
 export { signIn, signUp, list, remove, get, create, update, signOut, refresh, getMe };
