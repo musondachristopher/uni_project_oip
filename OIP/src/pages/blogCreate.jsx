@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { TextInput, Button, Label, Textarea } from "flowbite-react";
 import { create, update, get } from "../api.jsx";
 import { useNavigate, useParams } from "react-router-dom";
@@ -86,7 +86,7 @@ function BlogEditor({ initial=null, edit=false}){
   }, [blog.rating]);
 
   return (
-    <div className="create-blog w-3/4 p-4 shadow bg-white">
+    <div className="create-blog md:w-3/4 p-4 shadow bg-white">
       <form className="blog-form" onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-2">
           <div>
@@ -118,18 +118,20 @@ function BlogEditor({ initial=null, edit=false}){
                 ))}
               </div>
             </div>
-            <div className="w-1/2">
+            <div className="w-full">
               <Label>Course</Label>
               <Select
-                className="capitalize" // Replace this with appropriate Select component or library
+                className="capitalize text-black" // Replace this with appropriate Select component or library
                 isClearable={true}
-                onChange={(selected) =>
-                  setBlog({ ...blog, course: selected.value })
+                onChange={(selected) =>{
+                  console.log(selected)
+                  setBlog({ ...blog, course: selected })
+                }
                 }
                 options={courses.map((course) => {
                   return {
                     value: course,
-                    Label:
+                    label:
                       course.code.toUpperCase() +
                       " " +
                       course.name

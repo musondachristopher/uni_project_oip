@@ -66,3 +66,7 @@ a:active {
 .icon {
   @apply text-gray-300;
 }
+
+* {
+  @apply !rounded-none
+}

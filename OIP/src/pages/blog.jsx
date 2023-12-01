@@ -30,7 +30,7 @@ export function Blogs() {
 
   if (isLoading) return <div>Loading...</div>;
   else if (isError) return <div>Error 500</div>;
-  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError}/>
+  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError} />
 }
 
 export function BlogList({ blogs, isLoading, isError }) {
