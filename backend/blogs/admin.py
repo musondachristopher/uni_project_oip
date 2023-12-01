@@ -10,7 +10,7 @@ class CommentInline(admin.StackedInline):
 class BlogAdmin(admin.ModelAdmin):
   list_display = ['title', 'author', 'approved', 'created']
   list_filter = ['approved', 'created']
-  search_fields = ['title', 'author']
+  search_fields = ['title', 'author__first_name', "author__last_name", "author__email"]
   list_editable = ['approved']
   list_select_related = True
 

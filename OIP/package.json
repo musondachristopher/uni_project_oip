@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.19.0",
+    "string-strip-html": "^13.4.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

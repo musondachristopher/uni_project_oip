@@ -25,7 +25,9 @@ export default function Layout() {
 
         <div className="flex md:order-2">
           {!user.isAuthenticated ? (
-            <Button size="sm" onClick={() => navigate("/signin")}>Sign in</Button>
+            <Button size="sm" onClick={() => navigate("/signin")}>
+              Sign in
+            </Button>
           ) : (
             <Dropdown
               inline
@@ -38,20 +40,30 @@ export default function Layout() {
                 <div>{user.data.student_id}</div>
                 <div className="font-medium">{user.data.email}</div>
               </Dropdown.Header>
-              <Dropdown.Item icon={PencilIcon}>Create blog</Dropdown.Item>
-              <Dropdown.Item icon={BookOpenIcon}>My blogs</Dropdown.Item>
+              <Dropdown.Item
+                icon={PencilIcon}
+                onClick={() => navigate("blogs/create")}
+              >
+                Create blog
+              </Dropdown.Item>
+              <Dropdown.Item
+                icon={BookOpenIcon}
+                onClick={() => navigate("me/blogs")}
+              >
+                My blogs
+              </Dropdown.Item>
               {user.data.is_staff && (
                 <Dropdown.Item icon={SquaresPlusIcon}>
-                  <Link to="/admin" className="dropdown-item">
+                  <a href="http://localhost:8000/admin" className="dropdown-item">
                     Dashboard
-                  </Link>
+                  </a>
                 </Dropdown.Item>
               )}
               <Dropdown.Divider />
               <Dropdown.Item
                 onClick={mutation.mutate}
                 icon={ArrowLeftOnRectangleIcon}
-                >
+              >
                 Sign out
               </Dropdown.Item>
             </Dropdown>

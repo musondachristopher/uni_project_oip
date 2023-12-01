@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layout";
 import Home from "./pages/index";
-import { BlogList } from "./pages/blog";
+import { Blogs, MyBlogs } from "./pages/blog";
 import { BlogCreate, BlogEdit } from "./pages/blogCreate";
 import { BlogPage } from "./pages/blogPage";
 import { Signin, Signup } from "./pages/auth";
@@ -37,7 +37,8 @@ function App() {
       <Routes>
         <Route Component={Layout} path="/">
           <Route Component={Home} path="/" />
-          <Route Component={BlogList} path="/blogs" />
+          <Route Component={MyBlogs} path="/me/blogs" />
+          <Route Component={Blogs} path="/blogs" />
           <Route Component={BlogCreate} path="/blogs/create" />
           <Route Component={BlogPage} path="/blogs/:id" />
           <Route Component={BlogEdit} path="/blogs/:id/edit" />

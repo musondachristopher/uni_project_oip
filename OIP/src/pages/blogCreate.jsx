@@ -41,10 +41,10 @@ function BlogEditor({ initial=null, edit=false}){
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return edit ? update("blogs/", data.id + "/", data) : create("blogs/", data + "/", data)
+      return edit ? update("blogs/", data.id + "/", data) : create("blogs/", data)
     },
-    onSuccess: (data) => {
-      navigate("/blogs/" + data.id);
+    onSuccess: () => {
+      navigate("users/me/blogs/");
     },
   });
 

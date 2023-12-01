@@ -55,22 +55,8 @@ class CommentViewSet(ModelViewSet):
 	queryset = Comment.objects.filter(disabled=False)
 	serializer_class = CommentSerializer
 
-
-	def list(self, request, blog_id):
-		d = self.queryset.filter(blog__id=blog_id)
-		comments = self.serializer_class(d, many=True)
-		
-		return Response(comments.data, status=200)
-
-	def create(self, request, blog_id):
-		blog = Blog.is_approved.get(pk=blog_id)
-
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			serializer.save(blog=blog)
-
-			return Response(serializer.data, status=201)
-		return Response(serializer.errors, status=400)
-
+	def get_queryset(self):
+		blog_id = self.kwargs['blog_id']
+		return Comment.objects.filter(blog__id=blog_id)
   
 

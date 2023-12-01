@@ -9,7 +9,7 @@ class MyBlogs(ModelViewSet):
   serializer_class = BlogSerializer
   permission_classes = [IsCreatorOrAdminOrReadOnly]
 
-  def list(self, request):
-    q = self.queryset.filter(author__id = request.user.id)
-    blogs = BlogSerializer(q, many=True)
-    return Response(blogs.data)
+  def get_queryset(self):
+  	user = self.request.user
+
+  	return Blog.objects.filter(author__id=user.id)

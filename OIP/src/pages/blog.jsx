@@ -6,13 +6,34 @@ import { useQuery } from "react-query";
 import moment from "moment";
 import { MainLayout } from "../lib/mainLayout";
 
-export function BlogList() {
+
+
+export function MyBlogs() {
+  const {
+    data: blogs,
+    isLoading,
+    isError,
+  } = useQuery("myblogs", () => list("users/me/blogs"));
+
+  if (isLoading) return <div>Loading...</div>;
+  else if (isError) return <div>Error 500</div>;
+
+  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError} />
+}
+
+export function Blogs() {
   const {
     data: blogs,
     isLoading,
     isError,
   } = useQuery("blogs", () => list("blogs"));
 
+  if (isLoading) return <div>Loading...</div>;
+  else if (isError) return <div>Error 500</div>;
+  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError}/>
+}
+
+export function BlogList({ blogs, isLoading, isError }) {
   if (isLoading) return <div>Loading...</div>;
   else if (isError) return <div>Error 500</div>;
 
