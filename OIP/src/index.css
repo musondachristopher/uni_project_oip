@@ -67,6 +67,3 @@ a:active {
   @apply text-gray-300;
 }
 
-* {
-  @apply !rounded-none
-}

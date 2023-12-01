@@ -3,6 +3,7 @@ from .serializers import CommentSerializer, BlogSerializer, Blog, Comment
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import BasePermission
+from rest_framework import filters
 
 
 class IsCreatorOrAdminOrReadOnly(BasePermission):
@@ -27,6 +28,8 @@ class BlogViewSet(ModelViewSet):
 	queryset = Blog.is_approved.all()
 	serializer_class = BlogSerializer
 	permissions_classes = [IsCreatorOrAdminOrReadOnly]
+	filter_backends = [filters.SearchFilter]	
+	search_fields = ["body", "title", "author__first_name", "author__last_name"]
 
 	def create(self, request):
 		serializer = self.serializer_class(data=request.data)
