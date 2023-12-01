@@ -5,6 +5,7 @@ from rest_framework.serializers import (
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import authenticate
 from .models import User
+from rest_framework.validators import UniqueValidator
 
 
 class UserDetailsSerializer(ModelSerializer):
@@ -20,17 +21,21 @@ class UserDetailsSerializer(ModelSerializer):
 
 
 class UserRegistrationSerializer(RegisterSerializer):
-	first_name = CharField(max_length=50)
-	last_name = CharField(max_length=50)
+	first_name = CharField(max_length=50, required=True)
+	last_name = CharField(max_length=50, required=True)
+	student_id = CharField(max_length=10, required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+	username = None
 
 	def get_cleaned_data(self):
 		super().get_cleaned_data()
 		
 		return {
-				'username': self.validated_data.get('username', ''),
-				'password1': self.validated_data.get('password1', ''),
-				'password2': self.validated_data.get('password2', ''),
-				'email': self.validated_data.get('email', ''),
-				'first_name': self.validated_data.get('first_name', ''),
-				'last_name': self.validated_data.get('last_name', '')
+			'student_id': self.validated_data.get('student_id', ''),
+			'username': self.validated_data.get('student_id', ''),
+
+			'password1': self.validated_data.get('password1', ''),
+			'password2': self.validated_data.get('password2', ''),
+			'email': 		self.validated_data.get('email', ''),
+			'first_name': self.validated_data.get('first_name', ''),
+			'last_name': self.validated_data.get('last_name', '')
 		}
