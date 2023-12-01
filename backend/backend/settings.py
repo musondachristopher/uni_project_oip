@@ -59,7 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.LogUserMiddleware'
+    'users.middleware.LogUserMiddleware',
+    'users.middleware.MoveJWTRefreshCookieIntoTheBody',
 ]
 
 ROOT_URLCONF = 'backend.urls'

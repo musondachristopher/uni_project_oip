@@ -8,7 +8,7 @@ import { Signin, Signup } from "./pages/auth";
 import { userContext } from "./lib/contexts";
 import { useState, useEffect } from "react";
 
-import { getMe } from "./api";
+import { getMe, refresh } from "./api";
 import { AuthRoutes, ErrorPage } from "./misc";
 
 function App() {
@@ -19,17 +19,18 @@ function App() {
   });
 
   useEffect(() => {
-    try {
-      getMe().then((data) => {
+    refresh()
+      .then(() => getMe())
+      .then((data) => {
         setUser((prevUser) => ({
           ...prevUser,
           data: { ...data },
           isAuthenticated: true,
         }));
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error);
       });
-    } catch (e) {
-      console.log(e);
-    }
   }, []);
 
   return (

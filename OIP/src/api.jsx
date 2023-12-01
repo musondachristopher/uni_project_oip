@@ -11,7 +11,11 @@ async function signUp(_data) {
   })
 
   const data = await res.json()
-  data
+
+  if(res.status == 201)
+    return data
+  else
+    throw data
 }
 
 async function getMe() {
@@ -24,21 +28,24 @@ async function getMe() {
   })
 
   const data = await res.json()
-  return data
+
+  if (res.status == 200) return data;
+  else throw Error("Couldn't log in");
 }
 
-async function refresh(_data) {
-  let res = await fetch(URL + 'authorization/token/refresh', {
+async function refresh() {
+  let res = await fetch(URL + 'authorization/token/refresh/', {
     method: "POST",    
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(_data)
+    body: JSON.stringify({})
   })
 
   const data = await res.json()
-  return data
+  if (res.status == 200) return data;
+  else throw Error("Not valid");
 }
 
 async function signIn(_data) {
@@ -124,7 +131,7 @@ async function remove(uri, id) {
   })
 
   const data = await res.json()
-return data
+  return data
 }
 
 export { signIn, signUp, list, remove, get, create, update, signOut, refresh, getMe };
