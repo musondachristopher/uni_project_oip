@@ -2,8 +2,9 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useUser } from "./lib/contexts";
 import { signOut } from "./api";
 import { useMutation } from "react-query";
-import { Navbar, Dropdown, Button } from "flowbite-react";
+import { Navbar, Dropdown, Button, Avatar} from "flowbite-react";
 import { PencilIcon, SquaresPlusIcon, ArrowLeftOnRectangleIcon, BookOpenIcon } from "@heroicons/react/24/solid"
+import { SearchBar } from "./lib/search"
 
 export default function Layout() {
   const { user, setUser } = useUser();
@@ -15,7 +16,7 @@ export default function Layout() {
   });
 
   return (
-    <div className="bg-gray-50/40 min-h-screen">
+    <div className="bg-gray-50 min-h-screen">
       <Navbar fluid className="border-b">
         <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
           <Link to="/" className="text-lg">
@@ -23,6 +24,7 @@ export default function Layout() {
           </Link>
         </Navbar.Brand>
 
+        <SearchBar />
         <div className="flex md:order-2">
           {!user.isAuthenticated ? (
             <Button size="sm" onClick={() => navigate("/signin")}>
@@ -31,18 +33,26 @@ export default function Layout() {
           ) : (
             <Dropdown
               inline
-              label={<div>{`Hi ${user.data?.full_name}`}</div>}
+              label={
+                <>
+                <Avatar className="" rounded size="sm" 
+                  placeholderInitials={
+                    user.data.full_name.split(" ").reduce((a,b) => a += b.charAt(0), "")
+                  } />
+                <div className="md:block hidden">{`Hi ${user.data?.full_name}`}</div>
+                </>
+              }
               id="basic-nav-dropdown"
               className="justify-content-end"
             >
               <Dropdown.Header>
-                <div>{user.data.full_name}</div>
+                <div className="md:hidden">{user.data.full_name}</div>
                 <div>{user.data.student_id}</div>
                 <div className="font-medium">{user.data.email}</div>
               </Dropdown.Header>
               <Dropdown.Item
                 icon={PencilIcon}
-                onClick={() => navigate("blogs/create")}
+                onClick={() => navigate("me/blogs/create")}
               >
                 Create blog
               </Dropdown.Item>
@@ -69,13 +79,6 @@ export default function Layout() {
             </Dropdown>
           )}
         </div>
-
-        <Navbar.Toggle />
-        <Navbar.Collapse className="mr-auto ml-0">
-          <Link to="/blogs" className="">
-            <Navbar.Link>Blogs</Navbar.Link>
-          </Link>
-        </Navbar.Collapse>
       </Navbar>
       <div className="max-w-6xl p-2 w mx-auto">
         <div className="w-full">

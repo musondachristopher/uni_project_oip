@@ -5,46 +5,48 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../lib/contexts.js";
 import { courses } from "../courses.js";
 import { useMutation, useQuery } from "react-query";
-import { StarIcon } from "@heroicons/react/24/solid"
+import { StarIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
 
-
 export function BlogEdit() {
-  const params = useParams()
-  const { data, isLoading, isError } = useQuery(['blogs', params.id], () => get('blogs/', params.id))
+  const params = useParams();
+  const { data, isLoading, isError } = useQuery(["blogs", params.id], () =>
+    get("users/me/blogs/", params.id)
+  );
 
-  if(isLoading)
-    return <div></div>
+  if (isLoading) return <div></div>;
+  else if (isError) return <div></div>;
 
-  else if(isError)
-    return <div></div>
-
-  return(
-    <BlogEditor initial={data} edit={true}/>
-  )
+  return <BlogEditor initial={data} edit={true} />;
 }
 
 export function BlogCreate() {
   return <BlogEditor />;
 }
 
-function BlogEditor({ initial=null, edit=false}){
-  const [blog, setBlog] = useState(edit ? initial : {
-    title: "",
-    created: new Date(),
-    body: "",
-    author: null,
-    approved: false,
-    rating: 0,
-    course: null,
-  });
+function BlogEditor({ initial = null, edit = false }) {
+  const [blog, setBlog] = useState(
+    edit
+      ? initial
+      : {
+          title: "",
+          created: new Date(),
+          body: "",
+          author: null,
+          approved: false,
+          rating: 0,
+          course: null,
+        }
+  );
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return edit ? update("blogs/", data.id + "/", data) : create("blogs/", data)
+      return edit
+        ? update("users/me/blogs/", data.id + "/", data)
+        : create("users/me/blogs/", data);
     },
-    onSuccess: () => {
-      navigate("users/me/blogs/");
+    onSuccess: (data) => {
+      navigate(`/me/blogs/${data.id}`);
     },
   });
 
@@ -69,20 +71,37 @@ function BlogEditor({ initial=null, edit=false}){
 
   const handleChange = ({ target }) => {
     setBlog({ ...blog, [target.name]: target.value });
-  };  
+  };
 
   const handleMouseOver = (val) => {
-    document.querySelectorAll(".rate").forEach((el, index) => paintStars(el, index, val));
-  }
+    document
+      .querySelectorAll(".rate")
+      .forEach((el, index) => paintStars(el, index, val));
+  };
 
   const paintStars = (el, index, rate) => {
-    
     if (index < rate) el.classList.add("rate-active");
     else el.classList.remove("rate-active");
-  } 
+  };
+
+
+  const courseToRepr = (course) => {
+
+    return  course.code.toUpperCase() + " " +
+      course.name
+        .split(" ")
+        .map(
+          (txt) =>
+            txt.charAt(0).toUpperCase() +
+            txt.substr(1).toLowerCase()
+        )
+        .join(" ")
+  }
 
   useEffect(() => {
-    document.querySelectorAll(".rate").forEach((el, index) => paintStars(el, index, blog.rating));
+    document
+      .querySelectorAll(".rate")
+      .forEach((el, index) => paintStars(el, index, blog.rating));
   }, [blog.rating]);
 
   return (
@@ -123,25 +142,21 @@ function BlogEditor({ initial=null, edit=false}){
               <Select
                 className="capitalize text-black" // Replace this with appropriate Select component or library
                 isClearable={true}
-                onChange={(selected) =>{
-                  console.log(selected)
-                  setBlog({ ...blog, course: selected })
-                }
-                }
+                onChange={(selected) => {
+                  console.log(blog)
+                  setBlog(prev => {
+                    const temp =  selected ? { ...selected.value} : null
+                    return { ...prev, course: temp }
+                  });
+                }}
+                value={blog.course && {
+                  value: blog.course,
+                  label: courseToRepr(blog.course)
+                }}
                 options={courses.map((course) => {
                   return {
                     value: course,
-                    label:
-                      course.code.toUpperCase() +
-                      " " +
-                      course.name
-                        .split(" ")
-                        .map(
-                          (txt) =>
-                            txt.charAt(0).toUpperCase() +
-                            txt.substr(1).toLowerCase()
-                        )
-                        .join(" "),
+                    label: courseToRepr(course)
                   };
                 })}
               />

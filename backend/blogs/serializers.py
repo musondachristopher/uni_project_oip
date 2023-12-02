@@ -14,6 +14,12 @@ class AuthorSerializer(ModelSerializer):
 		return obj.get_full_name().title()
 
 
+class CourseSerializer(ModelSerializer):
+	class Meta:
+		model = Course
+		exclude = ['id']
+
+
 class CommentSerializer(ModelSerializer):
 	class Meta:
 		model = Comment
@@ -22,6 +28,7 @@ class CommentSerializer(ModelSerializer):
 
     	
 class BlogSerializer(ModelSerializer):
+	course = CourseSerializer(read_only=True)
 	author = AuthorSerializer(read_only=True)
 
 	class Meta:

@@ -1,10 +1,26 @@
 from django.shortcuts import render
-from .serializers import CommentSerializer, BlogSerializer, Blog, Comment
+from .serializers import CommentSerializer, BlogSerializer, Blog, Comment, Course
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import BasePermission
 from rest_framework import filters
+from rest_framework.pagination import PageNumberPagination
 
+
+class CustomDefaultPagination(PageNumberPagination):
+
+	page_size = 6
+	page_size_query_param = 'page_size'
+	# max_page_size = 10
+	page_query_param = 'page'
+
+	def get_paginated_response(self, data):
+		return Response({
+	    'next': self.page.next_page_number() if self.page.has_next() else None,
+	    'previous': self.page.previous_page_number() if self.page.has_previous() else None,
+	    'count': self.page.paginator.count,
+	    'results': data
+		})
 
 class IsCreatorOrAdminOrReadOnly(BasePermission):
 	def has_permission(self, request, view):
@@ -28,17 +44,9 @@ class BlogViewSet(ModelViewSet):
 	queryset = Blog.is_approved.all()
 	serializer_class = BlogSerializer
 	permissions_classes = [IsCreatorOrAdminOrReadOnly]
+	pagination_class = CustomDefaultPagination
 	filter_backends = [filters.SearchFilter]	
-	search_fields = ["body", "title", "author__first_name", "author__last_name"]
-
-	def create(self, request):
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			serializer.save(author=request.user)
-			return Response(serializer.data, status=201)
-
-		return Response(serializer.errors, status=400)
-
+	search_fields = ["body", "title", "author__first_name", "author__last_name", "course__code", "course__name"]
 
 	def approval(self, request, blog_id):
 		try:

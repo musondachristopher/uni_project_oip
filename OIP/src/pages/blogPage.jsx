@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { get, remove } from "../api.jsx";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../lib/contexts.js";
 import {
   UserIcon,
@@ -9,12 +9,14 @@ import {
   XCircleIcon,
   PencilSquareIcon,
   CheckCircleIcon,
+  CheckBadgeIcon,
+  UserCircleIcon
 } from "@heroicons/react/24/solid";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRef } from "react";
 import { Comments } from "../lib/comment.jsx";
-import { Dropdown } from "flowbite-react";
+import { Dropdown, Badge } from "flowbite-react";
 import moment from "moment";
 import { MainLayout } from "../lib/mainLayout.jsx";
 import { stripHtml } from "string-strip-html";
@@ -25,19 +27,22 @@ export function BlogPage() {
   const { user } = useUser();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     data: blog,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["blogs", params.id],
-    queryFn: ({ queryKey }) => get(queryKey[0] + "/", queryKey[1]),
+    queryFn: ({ queryKey }) => get(
+      (location.pathname.includes('me') ? "users/me/": "") + queryKey[0] + "/", queryKey[1]),
   });
 
   let bodyRef = useRef(null);
+
   const renderHTML = (data) => {
     if (bodyRef) {
-
       bodyRef.current.innerHTML = stripHtml(data, {
         stripTogetherWithTheirContents: [
           "script", // default
@@ -65,6 +70,8 @@ export function BlogPage() {
           return get("blogs/", params.id + "/approval");
         case "remove":
           return remove("blogs/", params.id);
+        case "author_remove":
+          return remove("users/me/blogs/", params.id);
       }
     },
 
@@ -93,10 +100,10 @@ export function BlogPage() {
         </h2>
 
         <div className="flex gap-4 my-3 text-sm">
-          {user.data?.id == blog.author.id && !blog.approved && (
-            <div className="rounded-full bg-red-500 text-sm p-1 mt-1">
+          {user.data?.id == blog.author?.id && !blog.approved && (
+            <Badge color="red" icon={ClockIcon}>
               Pending Approval
-            </div>
+            </Badge>
           )}
 
           <div className="ml-auto mr-0"></div>
@@ -104,21 +111,21 @@ export function BlogPage() {
             <Dropdown
               inline
               label={
-                <div className="bg-yellow-300 p-1 px-2 rounded">
+                <Badge color="green" icon={UserCircleIcon}>
                   Author Actions
-                </div>
+                </Badge>
               }
               arrowIcon={false}
             >
               <Dropdown.Item
                 icon={PencilSquareIcon}
-                onClick={() => navigate(`/blogs/${params.id}/edit`)}
+                onClick={() => navigate(`/me/blogs/${params.id}/edit`)}
               >
                 Edit
               </Dropdown.Item>
               <Dropdown.Item
                 icon={TrashIcon}
-                onClick={() => mutation.mutate("remove")}
+                onClick={() => mutation.mutate("author_remove")}
               >
                 Remove
               </Dropdown.Item>
@@ -130,9 +137,9 @@ export function BlogPage() {
             <Dropdown
               inline
               label={
-                <div className="bg-rose-300 p-1 px-2 rounded">
+                <Badge color="gray" icon={CheckBadgeIcon}>
                   Admin Actions
-                </div>
+                </Badge>
               }
               arrowIcon={false}
             >
@@ -179,7 +186,9 @@ export function BlogPage() {
           </div>
         </div>
 
-        <div ref={bodyRef} className="blog-body w-full"></div>
+        <article>
+          <div ref={bodyRef} className="blog-body w-full"></div>
+        </article>
 
         <div className="mt-8">
           <div className="font-medium">Comments</div>

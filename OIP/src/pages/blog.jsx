@@ -1,60 +1,114 @@
 import { list } from "../api";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { UserIcon, ClockIcon } from "@heroicons/react/24/solid";
-import { StarIcon } from "@heroicons/react/24/solid";
+import { StarIcon, ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "react-query";
 import moment from "moment";
 import { MainLayout } from "../lib/mainLayout";
-
+import { useUser } from "../lib/contexts";
+import { useEffect, useState } from "react";
 
 
 export function MyBlogs() {
+  const [ searchParams, setSearchParams ] = useSearchParams()
+  const [ page, setPage ] = useState(1)
+
   const {
-    data: blogs,
+    data,
     isLoading,
     isError,
-  } = useQuery("myblogs", () => list("users/me/blogs"));
+  } = useQuery({
+    queryKey: ["myblogs", page ], 
+    queryFn: () => list("users/me/blogs" + "?" + constructUrl().toString()),
+    staleTime: 3600 * 3
+  });
 
-  if (isLoading) return <div>Loading...</div>;
-  else if (isError) return <div>Error 500</div>;
+  const constructUrl = () => {
+    searchParams.delete("page")
+    searchParams.append("page", page)
+    setSearchParams(searchParams)
 
-  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError} />
+    return searchParams
+  }
+
+  useEffect(()=> {
+    constructUrl()
+  }, [page])
+
+  return (
+  <BlogList 
+    data={data} 
+    isLoading={isLoading} 
+    isError={isError} 
+    page={page} 
+    setPage={setPage}
+  />
+  )
 }
 
 export function Blogs() {
+  const [ searchParams, setSearchParams ] = useSearchParams()
+  const [ page, setPage ] = useState(1)
+
   const {
-    data: blogs,
+    data,
     isLoading,
     isError,
-  } = useQuery("blogs", () => list("blogs"));
+  } = useQuery({
+    queryKey: ["blogs", Object.fromEntries([ ...searchParams ]), page ], 
+    queryFn: () => list("blogs" + "?" + constructUrl().toString()),
+    staleTime: 3600 * 3
+  });
 
-  if (isLoading) return <div>Loading...</div>;
-  else if (isError) return <div>Error 500</div>;
-  return <BlogList blogs={blogs} isLoading={isLoading} isError={isError} />
+
+  const constructUrl = () => {
+    searchParams.delete("page")
+    searchParams.append("page", page)
+    setSearchParams(searchParams)
+
+    return searchParams
+  }
+
+  useEffect(()=> {
+    constructUrl()
+  }, [page])
+
+  return (
+  <BlogList 
+    data={data} 
+    isLoading={isLoading} 
+    isError={isError} 
+    page={page} 
+    setPage={setPage}
+  />
+  )
 }
 
-export function BlogList({ blogs, isLoading, isError }) {
+export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
+  const { user } = useUser()
+
   if (isLoading) return <div>Loading...</div>;
   else if (isError) return <div>Error 500</div>;
 
   return (
     <MainLayout>
-      <div className="flex flex-col space-y-6 shadow p-4 bg-white w-3/4">
-        {blogs.map((blog) => (
-          <Link to={"/blogs/" + blog.id} key={blog.id} className=" rounded-lg">
-            <div>
+      <div className="flex flex-col shadow p-4 bg-white md:w-3/4">
+        {data.results.map((blog) => (
+          <Link to={
+            (blog.author.id == user.data?.id ? "/me": "") + "/blogs/" + blog.id} key={blog.id} className=" rounded-lg">
+           <div className="py-4 border-b last:border-b">
               <div className="blog-title">{blog.title}</div>
-              <div className="">
-                {blog.course?.code} {blog.course?.name}
+              <div className="flex gap-2">
+                <div>{blog.course?.code.toUpperCase()} <span className="capitalize">{blog.course?.name}</span></div>
+                <div className="flex">
+                  {Array(blog.rating)
+                    .fill(null)
+                    .map((star, index) => (
+                      <StarIcon key={index} className="w-4 text-yellow-300" />
+                    ))}
+                </div>
               </div>
 
-              <div className="flex">
-                {Array(blog.rating)
-                  .fill(null)
-                  .map((star, index) => (
-                    <StarIcon key={index} className="w-4 text-yellow-300" />
-                  ))}
-              </div>
 
               <div className="flex items-center space-x-2 mt-2">
                 <div className="blog-info flex gap-2">
@@ -69,6 +123,26 @@ export function BlogList({ blogs, isLoading, isError }) {
             </div>
           </Link>
         ))}
+
+
+        {
+
+          (data.previous || data.next) && (
+          <div className="text-sm font-medium flex gap-1 items-center">
+            <button disabled={!data.previous} className="bg-orange-400 disabled:bg-gray-200 text-white rounded-full p-0.5" 
+              onClick={() => setPage(data.previous)} > 
+                <ChevronLeftIcon className="text-white w-4" stroke="3" />
+              </button> 
+
+            <div className="mx-4">{ page }</div>
+
+            <button disabled={!data.next}  className="bg-orange-400 disabled:bg-gray-200 text-white rounded-full p-0.5" 
+              onClick={() => setPage(data.next)}> 
+                <ChevronRightIcon className="text-white w-4" stroke="2" />
+              </button> 
+          </div>)
+        }
+
       </div>
       <div className="bg-white w-1/4">f</div>
     </MainLayout>

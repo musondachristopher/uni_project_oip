@@ -37,12 +37,14 @@ function App() {
     <userContext.Provider value={{ user, setUser }}>
       <Routes>
         <Route Component={Layout} path="/">
-          <Route Component={Home} path="/" />
-          <Route Component={MyBlogs} path="/me/blogs" />
+          <Route Component={Blogs} path="/" />
           <Route Component={Blogs} path="/blogs" />
-          <Route Component={BlogCreate} path="/blogs/create" />
+          <Route Component={MyBlogs} path="/me/blogs" />
+          <Route Component={BlogCreate} path="me/blogs/create" />
+          <Route Component={BlogEdit} path="me/blogs/:id/edit" />
           <Route Component={BlogPage} path="/blogs/:id" />
-          <Route Component={BlogEdit} path="/blogs/:id/edit" />
+          <Route Component={BlogPage} path="me/blogs/:id" />
+
           <Route Component={ErrorPage} path="*" />
         </Route>
 
