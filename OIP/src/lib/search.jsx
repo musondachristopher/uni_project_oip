@@ -23,7 +23,7 @@ export function SearchBar() {
 				placeholder="search articles, course codes and names"
 				value={search} onChange={ e => setSearch(e.target.value)} />
 			<button>
-				<MagnifyingGlassIcon className="w-6 p-0.5 rounded-full bg-gray-200 hover:bg-gray-300"/>
+				<MagnifyingGlassIcon className="w-6 p-0.5 rounded-full bg-primary-400 hover:bg-primary-500 text-white"/>
 			</button>
 		</form>
 	)

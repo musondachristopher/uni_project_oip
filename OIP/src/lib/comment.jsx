@@ -79,7 +79,7 @@ export function Comments({ blog_id }) {
             name="comment"
           />
         </div>
-        <Button className="w-full col-span-2" onClick={ () => mutation.mutate(msg) }>Comment</Button>
+        <Button className="w-full col-span-2" color="primary" onClick={ () => mutation.mutate(msg) }>Comment</Button>
       </form>
     </div>
   );
@@ -100,7 +100,7 @@ function CommentList({ comments , isLoading, isError }) {
     <div className="flex flex-col gap-1 mt-1">
       {comments.map(comment => (
         <div className="p-2 even:bg-gray-50 flex text-sm gap-1 items-start" key={comment.id}>
-          <ChatBubbleBottomCenterTextIcon className="w-4 icon mt-1" />
+          <ChatBubbleBottomCenterTextIcon className="w-4 text-primary-500 mt-1" />
           <div>
             <div className="flex items-center gap-1">
               <span className="font-medium text-normal">{comment.full_name}</span>

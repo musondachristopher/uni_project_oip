@@ -10,7 +10,7 @@ export function AuthRoutes() {
 
   return (
     <div className="">
-      <div className="text-3xl text-center font-medium mt-4"
+      <div className="text-3xl text-center font-medium mt-4 text-primary-500"
         onClick={() => navigate("/")}
       >Toggy</div>
       <Outlet />
@@ -26,7 +26,7 @@ export function ErrorPage() {
       <div className="text-5xl font-medium">Oops!</div>
       <div>Couldn't find page</div>
 
-      <Button onClick={() => navigate("/")}>go to home page</Button>
+      <Button color="primary" onClick={() => navigate("/")}>go to home page</Button>
     </div>
   );
 }

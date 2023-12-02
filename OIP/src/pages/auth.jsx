@@ -39,7 +39,7 @@ export function Signin() {
       onSubmit={handleSubmit}
       className="max-w-lg mx-auto border p-4 rounded-lg mt-10 bg-white"
     >
-      <h3 className="mb-4">Sign in</h3>
+      <h3 className="mb-4 text-lg font-bold">Sign in</h3>
       <div className="mb-3">
         <Label for="email">Email</Label>
         <TextInput
@@ -66,7 +66,7 @@ export function Signin() {
         onClick={() => navigate("/signup")}
         className="text-xs text-center mb-2 col-span-2"
       >
-        Dont have an account?Sign up <b className="text-blue-500">here</b>
+        Dont have an account?Sign up <b className="text-primary-500">here</b>
       </p>
 
       <Button color="primary" type="submit" className="w-full">
@@ -109,7 +109,7 @@ export function Signup() {
       onSubmit={handleSubmit}
       className="max-w-lg mx-auto border p-4 rounded-lg grid grid-cols-2 gap-2 mt-10 bg-white"
     >
-      <h3 className="mb-4 col-span-2">Sign up</h3>
+      <h3 className="mb-4 col-span-2 text-lg font-bold">Sign up</h3>
       <div className="mb-3">
         <Label htmlFor="first_name">First Name</Label>
         <TextInput
@@ -182,7 +182,7 @@ export function Signup() {
         onClick={() => navigate("/signin")}
         className="text-xs text-center mb-2 col-span-2"
       >
-        Already have an account?Sign in <b className="text-blue-500">here</b>
+        Already have an account?Sign in <b className="text-primary-500">here</b>
       </p>
 
       <Button className="col-span-2 w-full" color="primary" type="submit">Create Account</Button>

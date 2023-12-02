@@ -1,4 +1,4 @@
-const URL = "http://localhost:8000/"
+const URL = import.meta.env.VITE_BACKEND + "/"
 
 async function signUp(_data) {
   let res = await fetch(URL + 'authorization/registration/', {

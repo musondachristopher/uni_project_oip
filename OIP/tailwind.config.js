@@ -13,7 +13,7 @@ export default {
     		sans: ["Nunito", "sans", "sans-serif"]
     	},
       colors: {
-        primary: {...colors.purple}
+        primary: {...colors.orange}
       }
     },
   },

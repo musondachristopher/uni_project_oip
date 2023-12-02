@@ -19,7 +19,7 @@ export default function Layout() {
     <div className="bg-gray-50 min-h-screen">
       <Navbar fluid className="shadow py-4">
         <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
-          <Link to="/" className="text-lg">
+          <Link to="/" className="text-lg text-primary-500">
             Toggy
           </Link>
         </Navbar.Brand>
@@ -64,7 +64,7 @@ export default function Layout() {
               </Dropdown.Item>
               {user.data.is_staff && (
                 <Dropdown.Item icon={SquaresPlusIcon}>
-                  <a href="http://localhost:8000/admin" className="dropdown-item">
+                  <a href={import.meta.env.VITE_ADMIN_SITE} className="dropdown-item">
                     Dashboard
                   </a>
                 </Dropdown.Item>

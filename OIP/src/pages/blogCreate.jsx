@@ -86,7 +86,6 @@ function BlogEditor({ initial = null, edit = false }) {
     else el.classList.remove("rate-active");
   };
 
-
   const courseToRepr = (course) => {
 
     return  course.code.toUpperCase() + " " +
