@@ -13,3 +13,18 @@ export function useUser() {
   const { user, setUser } = context;
   return { user, setUser };
 }
+
+
+export const Courses = createContext([])
+
+
+export function useCourses() {
+  const context = useContext(Courses)
+
+  if (!context) {
+    throw new Error('useUser must be used within a UserContextProvider');
+  }
+
+  const { courses, setCourses } = context
+  return { courses }
+}

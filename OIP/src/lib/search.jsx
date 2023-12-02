@@ -3,6 +3,7 @@ import { TextInput } from "flowbite-react"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useSearchParams, useNavigate, createSearchParams } from "react-router-dom"
 
+
 export function SearchBar() {
 	const [ search, setSearch ] = useState("")
 	const navigate = useNavigate()
@@ -11,8 +12,8 @@ export function SearchBar() {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 	  navigate({
-	  	pathname: `/blogs`,
-	  	search: createSearchParams({ search }).toString()
+	  	pathname: `/search`,
+	  	search: createSearchParams({ q: search }).toString()
 	  });
   }
 

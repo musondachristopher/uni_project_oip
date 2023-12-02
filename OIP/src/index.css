@@ -7,8 +7,8 @@
 
 :root {
   --bg-color: #111;
-  --color: #333;
   --shadow: 0 2px 2px 1px #3331;
+  color: #555;
 };
 
 a, 
@@ -20,38 +20,8 @@ a:active {
 }
 
 .card {
-  @apply bg-white shadow rounded-lg overflow-clip;
+  @apply bg-white shadow rounded-lg overflow-clip flex-shrink-0 flex-grow-0 h-fit;
 }
-/* Sample CSS */
-.blog-link {
-  text-decoration: none;
-  color: var(--color);
-  padding: 10px;
-  margin-bottom: 10px;
-  display: block;
-  box-shadow: var(--shadow);
-}
-
-.blog-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.blog-info {
-  font-size: 0.9rem;
-}
-
-.create-blog-link {
-  display: block;
-  margin-top: 20px;
-  color: #fff;
-  background-color: #007bff;
-  padding: 10px;
-  text-align: center;
-  text-decoration: none;
-}
-
-/* Add more styles as needed for BlogDetails and BlogCreate components */
 .rate {
   @apply text-gray-200;
 }

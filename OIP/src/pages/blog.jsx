@@ -1,5 +1,5 @@
 import { list } from "../api";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams, useParams } from "react-router-dom";
 import { UserIcon, ClockIcon } from "@heroicons/react/24/solid";
 import {
   StarIcon,
@@ -11,47 +11,41 @@ import moment from "moment";
 import { MainLayout } from "../lib/mainLayout";
 import { useUser } from "../lib/contexts";
 import { useEffect, useState } from "react";
+import { CourseSidebar} from "../lib/course"
+
 
 export function MyBlogs() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["myblogs", page],
-    queryFn: () => list("users/me/blogs" + "?" + constructUrl().toString()),
-    staleTime: 3600 * 3,
-  });
-
-  const constructUrl = () => {
-    searchParams.delete("page");
-    searchParams.append("page", page);
-    setSearchParams(searchParams);
-
-    return searchParams;
-  };
-
-  useEffect(() => {
-    constructUrl();
-  }, [page]);
-
-  return (
-    <BlogList
-      data={data}
-      isLoading={isLoading}
-      isError={isError}
-      page={page}
-      setPage={setPage}
-    />
-  );
+  return(
+    <Blogs url={"users/me/blogs"} />
+  )
 }
 
-export function Blogs() {
+export function Search(){
+  return(
+    <Blogs keys={["search", "blogs"]}/>
+  )
+}
+
+export function CourseBlogs(){
+  const { course_code } = useParams()
+  return(
+    <Blogs url={"blogs/courses/" + course_code} keys={["blogs", "courses", course_code ]}/>
+  )
+}
+
+export function PopularFull(){
+  return(
+    <Blogs url={"blogs/popular"} keys={["blogs", "popular"]}/>
+  )
+}
+
+export function Blogs({ url="blogs", keys=["blogs"] }){
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["blogs", Object.fromEntries([...searchParams]), page],
-    queryFn: () => list("blogs" + "?" + constructUrl().toString()),
+    queryKey: [...keys, Object.fromEntries([...searchParams]), page],
+    queryFn: () => list(url + "?" + constructUrl().toString()),
     staleTime: 3600 * 3,
   });
 
@@ -105,10 +99,10 @@ export function BlogList({
                 blog.id
               }
               key={blog.id}
-              className="border-b last:border-b-0"
+              className="border-b last:border-b-0 group"
             >
               <div className="py-4">
-                <div className="capitalize font-bold text-2xl text-black">
+                <div className="capitalize font-bold text-2xl text-gray-600 group-hover:text-primary-500">
                   {blog.title}
                 </div>
                 <div className="flex gap-2 capitalize text-sm">
@@ -162,7 +156,10 @@ export function BlogList({
           </div>
         )}
       </div>
-      <div className="md:w-1/4">{children}</div>
+      <div className="md:w-1/4 flex flex-col gap-4">
+        {children}
+        <CourseSidebar />
+      </div>
     </MainLayout>
   );
 }
@@ -198,7 +195,7 @@ export function SimilarBlogs({ blog }) {
       data={data}
       isLoading={isLoading}
       isError={isError}
-      link={"blogs/course/" + blog.course.code}
+      link={"blogs/courses/" + blog.course.code}
     />
   );
 }
@@ -212,19 +209,21 @@ function SideBarBlogs({ title, data, isLoading, isError, link }) {
           <div> Loading </div>
         ) : isError ? (
           <div> Error </div>
-        ) : data.length == 0 ? (
-          <div> No {title} blogs </div>
+        ) : data.results.length == 0 ? (
+          <div className="p-2 grid-cols-1 grid-rows-1 text-sm text-gray-500 grid place-items-center h-full"> 
+            <span>No {title} blogs found</span> 
+          </div>
         ) : (
-          <div className="">
+          <div className="h-full">
             <div className="p-2">
               {data.results.map((blog) => (
                 <Link
                   key={blog.id}
                   to={"/blogs/" + blog.id}
-                  className="border-b-2 last:border-b-0"
+                  className="border-b-2 last:border-b-0 group"
                 >
                   <div className="text-sm py-2">
-                    <div className="capitalize font-bold">{blog.title}</div>
+                    <div className="capitalize font-bold group-hover:text-primary-500">{blog.title}</div>
                     <div className="capitalize truncate mt-1">
                       {blog.course.name}
                     </div>
@@ -235,7 +234,7 @@ function SideBarBlogs({ title, data, isLoading, isError, link }) {
                 </Link>
               ))}
             </div>
-            <Link to={"/" + link}>
+            <Link to={"/" + link} className="mb-0 mt-auto">
               <div
                 className="font-bold mt-2 text-primary-500 text-center
                p-2 w-full text-sm"
@@ -246,7 +245,6 @@ function SideBarBlogs({ title, data, isLoading, isError, link }) {
           </div>
         )}
       </div>
-      <div></div>
     </div>
   );
 }

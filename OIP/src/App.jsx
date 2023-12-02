@@ -1,16 +1,16 @@
-import { Routes, Route } from "react-router-dom";
 import Layout from "./layout";
-import Home from "./pages/index";
-import { Blogs, MyBlogs } from "./pages/blog";
+import { Routes, Route } from "react-router-dom";
+import { Blogs, MyBlogs, Search, PopularFull, CourseBlogs } from "./pages/blog";
 import { BlogCreate, BlogEdit } from "./pages/blogCreate";
 import { BlogPage } from "./pages/blogPage";
 import { Signin, Signup } from "./pages/auth";
-import { userContext } from "./lib/contexts";
+import { userContext, Courses } from "./lib/contexts";
 import { useState, useEffect } from "react";
-
-import { getMe, refresh } from "./api";
+import { getMe, refresh, list } from "./api";
 import { AuthRoutes, ErrorPage } from "./misc";
 import { Flowbite } from 'flowbite-react';
+import { useQuery } from 'react-query'
+
 
 const customTheme = {
   button: {
@@ -26,6 +26,12 @@ function App() {
     isAuthenticated: false,
     access: "",
   });
+
+  const [ courses, setCourses ] = useState([])
+
+  useEffect(() => {
+    list('/courses').then(data => setCourses(data))
+  }, [])
 
   useEffect(() => {
     refresh()
@@ -45,10 +51,13 @@ function App() {
   return (
     <Flowbite theme={{ theme: customTheme }} >
     <userContext.Provider value={{ user, setUser }}>
+    <Courses.Provider value={{ courses, setCourses }} >
       <Routes>
         <Route Component={Layout} path="/">
+          <Route Component={Blogs} path="/search" />
           <Route Component={Blogs} path="/" />
-          <Route Component={Blogs} path="/blogs" />
+          <Route Component={PopularFull} path="/blogs/popular" />
+          <Route Component={CourseBlogs} path="/blogs/courses/:course_code" />
           <Route Component={MyBlogs} path="/me/blogs" />
           <Route Component={BlogCreate} path="me/blogs/create" />
           <Route Component={BlogEdit} path="me/blogs/:id/edit" />
@@ -63,6 +72,7 @@ function App() {
           <Route Component={Signup} path="/signup" />
         </Route>
       </Routes>
+    </Courses.Provider>
     </userContext.Provider>
     </Flowbite>
   );

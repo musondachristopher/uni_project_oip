@@ -161,8 +161,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-
     ],
+    'SEARCH_PARAM': 'q',
 }
 
 REST_AUTH = {

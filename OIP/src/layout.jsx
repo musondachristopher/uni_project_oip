@@ -16,7 +16,7 @@ export default function Layout() {
   });
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50/80 min-h-screen">
       <Navbar fluid className="shadow py-4">
         <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
           <Link to="/" className="text-lg text-primary-500">

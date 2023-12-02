@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { TextInput, Button, Label, Textarea } from "flowbite-react";
 import { create, update, get } from "../api.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUser } from "../lib/contexts.js";
-import { courses } from "../courses.js";
+import { useUser, useCourses } from "../lib/contexts.js";
 import { useMutation, useQuery } from "react-query";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
 import { MainLayout } from "../lib/mainLayout.jsx";
+
 
 
 export function BlogEdit() {
@@ -27,6 +27,7 @@ export function BlogCreate() {
 }
 
 function BlogEditor({ initial = null, edit = false }) {
+  const { courses } = useCourses()
   const [blog, setBlog] = useState(
     edit
       ? initial
@@ -140,7 +141,7 @@ function BlogEditor({ initial = null, edit = false }) {
                 ))}
               </div>
             </div>
-            <div className="max-w-sm mr-0 ml-auto">
+            <div className="max-w-sm w-full mr-0 ml-auto">
               <Label>Course</Label>
               <Select
                 className="capitalize text-black" // Replace this with appropriate Select component or library

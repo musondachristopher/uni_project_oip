@@ -5,6 +5,8 @@ import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 import { create, list } from "../api";
 import { useUser } from "./contexts";
 import moment from "moment";
+import { Loading } from "./loading"
+
 
 export function Comments({ blog_id }) {
   const { user } = useUser()
@@ -44,12 +46,14 @@ export function Comments({ blog_id }) {
 
   return (
     <div>
+      <div className="font-semibold">Comments</div>
+
       <CommentList
         isLoading={isLoading}
         comments={comments}
         isError={isError}
       />
-      <form className="grid grid-cols-2 gap-2 mt-8">
+      <form className="grid md:grid-cols-2 grid-cols-1 gap-2 mt-8">
         <div>
           <Label>Full name</Label>
           <TextInput
@@ -87,10 +91,7 @@ export function Comments({ blog_id }) {
 
 function CommentList({ comments , isLoading, isError }) {
   if(isLoading) return (
-    <div className="w-full h-20"> 
-      <div className="border-2 w-6 rounded-full m-auto aspect-square 
-        border-black/10 border-t-black animate-spin ease-in-out"></div>
-    </div>
+    <Loading />
   )
 
   else if(isError)
@@ -99,7 +100,7 @@ function CommentList({ comments , isLoading, isError }) {
   return (
     <div className="flex flex-col gap-1 mt-1">
       {comments.map(comment => (
-        <div className="p-2 even:bg-gray-50 flex text-sm gap-1 items-start" key={comment.id}>
+        <div className="p-2 flex text-sm gap-1 items-start" key={comment.id}>
           <ChatBubbleBottomCenterTextIcon className="w-4 text-primary-500 mt-1" />
           <div>
             <div className="flex items-center gap-1">

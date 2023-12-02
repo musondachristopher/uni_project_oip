@@ -192,8 +192,6 @@ export function BlogPage() {
         </article>
 
         <div className="mt-8">
-          <div className="font-medium">Comments</div>
-
           <Comments blog_id={blog.id} />
         </div>
       </div>
