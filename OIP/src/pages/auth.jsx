@@ -69,7 +69,7 @@ export function Signin() {
         Dont have an account?Sign up <b className="text-blue-500">here</b>
       </p>
 
-      <Button variant="primary" type="submit" className="w-full">
+      <Button color="primary" type="submit" className="w-full">
         Login
       </Button>
     </form>
@@ -185,7 +185,7 @@ export function Signup() {
         Already have an account?Sign in <b className="text-blue-500">here</b>
       </p>
 
-      <Button className="col-span-2 w-full" type="submit">Create Account</Button>
+      <Button className="col-span-2 w-full" color="primary" type="submit">Create Account</Button>
     </form>
   );
 }

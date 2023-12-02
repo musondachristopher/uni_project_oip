@@ -80,11 +80,13 @@ export function Blogs() {
     isError={isError} 
     page={page} 
     setPage={setPage}
-  />
+  >
+    <PopularBlogs />
+  </BlogList>
   )
 }
 
-export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
+export function BlogList({ data, isLoading, isError, page, children=null, setPage=() => {} }) {
   const { user } = useUser()
 
   if (isLoading) return <div>Loading...</div>;
@@ -92,14 +94,16 @@ export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
 
   return (
     <MainLayout>
-      <div className="flex flex-col shadow p-4 bg-white md:w-3/4">
+      <div className="card p-4 md:w-3/4 ">
         {data.results.map((blog) => (
           <Link to={
-            (blog.author.id == user.data?.id ? "/me": "") + "/blogs/" + blog.id} key={blog.id} className=" rounded-lg">
-           <div className="py-4 border-b last:border-b">
-              <div className="blog-title">{blog.title}</div>
+            (blog.author.id == user.data?.id ? "/me": "") + "/blogs/" + blog.id} key={blog.id} 
+            className="border-b last:border-b-0">
+           <div className="py-4">
+              <div className="capitalize font-bold text-2xl text-black">{blog.title}</div>
               <div className="flex gap-2">
-                <div>{blog.course?.code.toUpperCase()} <span className="capitalize">{blog.course?.name}</span></div>
+                <div>{blog.course?.code.toUpperCase()} 
+                  <span className="capitalize text-sm">{blog.course?.name}</span></div>
                 <div className="flex">
                   {Array(blog.rating)
                     .fill(null)
@@ -110,7 +114,7 @@ export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
               </div>
 
 
-              <div className="flex items-center space-x-2 mt-2">
+              <div className="flex items-center space-x-2 mt-2 text-sm">
                 <div className="blog-info flex gap-2">
                   <UserIcon className="icon-sm icon" />
                   {blog.author.full_name}
@@ -126,7 +130,6 @@ export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
 
 
         {
-
           (data.previous || data.next) && (
           <div className="text-sm font-medium flex gap-1 items-center">
             <button disabled={!data.previous} className="bg-orange-400 disabled:bg-gray-200 text-white rounded-full p-0.5" 
@@ -144,7 +147,67 @@ export function BlogList({ data, isLoading, isError, page, setPage=() => {} }) {
         }
 
       </div>
-      <div className="bg-white w-1/4">f</div>
+      <div className="md:w-1/4">
+        { children }      
+
+      </div>
     </MainLayout>
   );
 }
+
+
+function PopularBlogs(){
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["popularblogs-sidebar", { size: 5 }],
+    queryFn: () => list("blogs/popular?size=5"),
+    staleTime: 3600 
+  })
+
+  return(
+   <SideBarBlogs title="Popular" data={data} isLoading={isLoading} isError={isError} link={"blogs/popular"} />
+  )
+}
+
+
+export function SimilarBlogs({ blog }){
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["similarblogs", { id: blog.id, size: 5} ],
+    queryFn: () => list(`blogs/${blog.id}/similar?size=5`),
+    staleTime: 3600 
+  })
+
+  return(
+   <SideBarBlogs title="Similar" data={data} isLoading={isLoading} isError={isError} link={"blogs/course/" + blog.course.code}/>
+  )
+}
+
+
+function SideBarBlogs({ title, data, isLoading, isError, link }){
+  return(
+    <div className="card">
+        <div className="font-medium text-xl px-2 pt-3">{title}</div>
+        <div className="min-h-[96px]">
+        { isLoading ? <div> Loading </div> :
+          isError ? <div> Error </div> :
+          data.length == 0 ? <div> No {title} blogs </div>
+          : 
+          <div className="p-2">
+            <div>
+            { data.results.map(blog => (
+              <Link key={blog.id} to={"/blogs/" + blog.id} className="border-b-2 last:border-b-0">
+              <div className="text-sm py-2">
+                <div className="capitalize font-bold">{blog.title}</div>
+                <div className="capitalize truncate mt-1">{blog.course.name}</div>
+                <div className="capitalize text-xs">{moment(blog.created).format("Do MMMM YYYY")}</div>
+              </div>
+              </Link>)) 
+            }                
+            </div>
+            <Link className="font-bold mt-2" to={"/" + link }>SEE MORE </Link>
+          </div>
+        }
+        </div>
+      <div></div>
+    </div>
+  )
+}  

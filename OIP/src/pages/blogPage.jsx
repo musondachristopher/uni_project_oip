@@ -20,6 +20,7 @@ import { Dropdown, Badge } from "flowbite-react";
 import moment from "moment";
 import { MainLayout } from "../lib/mainLayout.jsx";
 import { stripHtml } from "string-strip-html";
+import { SimilarBlogs } from "./blog.jsx";
 
 
 export function BlogPage() {
@@ -94,8 +95,8 @@ export function BlogPage() {
 
   return (
     <MainLayout>
-      <div className="blog-details bg-white p-4 shadow md:w-3/4">
-        <h2 className="text-5xl text-center mb-4 font-semibold">
+      <div className="card md:w-3/4 p-4">
+        <h2 className="text-5xl text-center mb-4 font-semibold capitalize">
           {blog.title}
         </h2>
 
@@ -196,7 +197,11 @@ export function BlogPage() {
           <Comments blog_id={blog.id} />
         </div>
       </div>
-      <div className="md:w-1/4 shadow p-4 bg-white flex-grow-0">r</div>
+      <div className="md:w-1/4">
+        { !isLoading && !isError && (
+          <SimilarBlogs blog={blog} />
+        )}
+      </div>
     </MainLayout>
   );
 }

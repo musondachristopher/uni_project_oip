@@ -7,6 +7,8 @@ import { courses } from "../courses.js";
 import { useMutation, useQuery } from "react-query";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
+import { MainLayout } from "../lib/mainLayout.jsx";
+
 
 export function BlogEdit() {
   const params = useParams();
@@ -105,7 +107,9 @@ function BlogEditor({ initial = null, edit = false }) {
   }, [blog.rating]);
 
   return (
-    <div className="create-blog md:w-3/4 p-4 shadow bg-white">
+    <MainLayout>
+    <div className="card md:w-3/4 p-4">
+      <div className="text-2xl font-bold">{ edit ? "Edit" : "Add" } Article</div>
       <form className="blog-form" onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-2">
           <div>
@@ -137,7 +141,7 @@ function BlogEditor({ initial = null, edit = false }) {
                 ))}
               </div>
             </div>
-            <div className="w-full">
+            <div className="max-w-sm mr-0 ml-auto">
               <Label>Course</Label>
               <Select
                 className="capitalize text-black" // Replace this with appropriate Select component or library
@@ -171,11 +175,12 @@ function BlogEditor({ initial = null, edit = false }) {
               onChange={(e) => handleChange(e)}
             ></Textarea>
           </div>
-          <Button onClick={handleSubmit} className="submit-button w-25">
+          <Button onClick={handleSubmit} className="submit-button w-25" color="primary">
             {edit ? "Save changes" : "Submit blog"}
           </Button>
         </div>
       </form>
     </div>
+    </MainLayout>
   );
 }

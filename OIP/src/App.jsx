@@ -10,6 +10,15 @@ import { useState, useEffect } from "react";
 
 import { getMe, refresh } from "./api";
 import { AuthRoutes, ErrorPage } from "./misc";
+import { Flowbite } from 'flowbite-react';
+
+const customTheme = {
+  button: {
+    color: {
+      primary: 'bg-primary-500 hover:bg-primary-600 text-white font-semibold focus:ring-primary-300',
+    },
+  },
+};
 
 function App() {
   const [user, setUser] = useState({
@@ -34,6 +43,7 @@ function App() {
   }, []);
 
   return (
+    <Flowbite theme={{ theme: customTheme }} >
     <userContext.Provider value={{ user, setUser }}>
       <Routes>
         <Route Component={Layout} path="/">
@@ -54,6 +64,7 @@ function App() {
         </Route>
       </Routes>
     </userContext.Provider>
+    </Flowbite>
   );
 }
 

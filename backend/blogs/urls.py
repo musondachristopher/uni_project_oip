@@ -7,6 +7,7 @@ router.register(r'', BlogViewSet)
 
 urlpatterns = [
   *router.urls,
-  path('<int:blog_id>/approval', BlogViewSet.as_view({'get': 'approval'}), name="blog-approval"),
+  # path('popular', BlogViewSet.as_view({'get': 'popular'}), name='popular-blogs'),
+  # path('<int:blog_id>/approval', BlogViewSet.as_view({'get': 'approval'}), name="blog-approval"),
   path('<int:blog_id>/comments/', CommentViewSet.as_view({'get': 'list', 'post': 'create'}), name='blog-comments'),
 ]

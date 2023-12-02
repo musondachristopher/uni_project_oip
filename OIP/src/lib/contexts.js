@@ -13,15 +13,3 @@ export function useUser() {
   const { user, setUser } = context;
   return { user, setUser };
 }
-
-export const useNavigateParams = () => {
-  const navigate = useNavigate();
-
-  return (pathname, params) => {
-    const path = {
-      pathname,
-      search: createSearchParams(params).toString()
-    };
-    navigate(path);
-  };
-};

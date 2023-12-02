@@ -17,7 +17,7 @@ export default function Layout() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Navbar fluid className="border-b">
+      <Navbar fluid className="shadow py-4">
         <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
           <Link to="/" className="text-lg">
             Toggy
@@ -27,7 +27,7 @@ export default function Layout() {
         <SearchBar />
         <div className="flex md:order-2">
           {!user.isAuthenticated ? (
-            <Button size="sm" onClick={() => navigate("/signin")}>
+            <Button size="sm" color="primary" onClick={() => navigate("/signin")}>
               Sign in
             </Button>
           ) : (
@@ -35,7 +35,7 @@ export default function Layout() {
               inline
               label={
                 <>
-                <Avatar className="" rounded size="sm" 
+                <Avatar className="md:mr-2" rounded size="sm" 
                   placeholderInitials={
                     user.data.full_name.split(" ").reduce((a,b) => a += b.charAt(0), "")
                   } />
