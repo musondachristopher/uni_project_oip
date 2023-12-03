@@ -9,37 +9,43 @@ import {
 import { useQuery } from "react-query";
 import moment from "moment";
 import { MainLayout } from "../lib/mainLayout";
-import { useUser } from "../lib/contexts";
+import { useUser, useCourses } from "../lib/contexts";
 import { useEffect, useState } from "react";
 import { CourseSidebar} from "../lib/course"
+import { Loading } from "../lib/loading"
 
 
 export function MyBlogs() {
   return(
-    <Blogs url={"users/me/blogs"} />
+    <Blogs url={"users/me/blogs"} title="My Blogs"/>
   )
 }
 
 export function Search(){
+  const [searchParams, setSearchParams] = useSearchParams();
+
   return(
-    <Blogs keys={["search", "blogs"]}/>
+    <Blogs keys={["search", "blogs"]} title={`Search results for "${searchParams.get('q')}" `}/>
   )
 }
 
 export function CourseBlogs(){
   const { course_code } = useParams()
+  const { courses } = useCourses()
   return(
-    <Blogs url={"blogs/courses/" + course_code} keys={["blogs", "courses", course_code ]}/>
+    <Blogs url={"blogs/courses/" + course_code} keys={["blogs", "courses", course_code ]} 
+      title={`Blogs about ${courses.find(i => i.code == course_code)?.code.toUpperCase()}`}
+    />
   )
 }
 
 export function PopularFull(){
   return(
-    <Blogs url={"blogs/popular"} keys={["blogs", "popular"]}/>
+    <Blogs url={"blogs/popular"} title={"Popular Blogs"} keys={["blogs", "popular"]}/>
   )
 }
 
-export function Blogs({ url="blogs", keys=["blogs"] }){
+export function Blogs({ url="blogs", title="", keys=["blogs"] }){
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
 
@@ -68,6 +74,7 @@ export function Blogs({ url="blogs", keys=["blogs"] }){
       isError={isError}
       page={page}
       setPage={setPage}
+      title={title}
     >
       <PopularBlogs />
     </BlogList>
@@ -79,19 +86,20 @@ export function BlogList({
   isLoading,
   isError,
   page,
+  title = "",
   children = null,
   setPage = () => {},
 }) {
   const { user } = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
-  else if (isError) return <div>Error 500</div>;
-
   return (
     <MainLayout>
       <div className="card p-4 md:w-3/4 ">
+        { title && <div className="font-semibold text-xl">{title}</div> }
         <div>
-          {data.results.map((blog) => (
+          { isLoading ? <Loading/> :  
+            isError ? <div>Error 500</div> :
+            data.results.map((blog) => (
             <Link
               to={
                 (blog.author.id == user.data?.id ? "/me" : "") +
@@ -134,9 +142,10 @@ export function BlogList({
               </div>
             </Link>
           ))}
+        
         </div>
 
-        {(data.previous || data.next) && (
+        {data && (data.previous || data.next) && (
           <div className="text-sm font-medium flex gap-1 items-center mt-8">
             <button
               disabled={!data.previous}
@@ -208,7 +217,7 @@ function SideBarBlogs({ title, data, isLoading, isError, link }) {
       <div className="font-medium text-xl px-2 pt-3">{title}</div>
       <div className="min-h-[96px]">
         {isLoading ? (
-          <div> Loading </div>
+          < Loading />
         ) : isError ? (
           <div> Error </div>
         ) : data.results.length == 0 ? (

@@ -54,7 +54,7 @@ function App() {
     <Courses.Provider value={{ courses, setCourses }} >
       <Routes>
         <Route Component={Layout} path="/">
-          <Route Component={Blogs} path="/search" />
+          <Route Component={Search} path="/search" />
           <Route Component={Blogs} path="/" />
           <Route Component={PopularFull} path="/blogs/popular" />
           <Route Component={CourseBlogs} path="/blogs/courses/:course_code" />

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { get, remove } from "../api.jsx";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../lib/contexts.js";
+import { Loading } from "../lib/loading"
 import {
   UserIcon,
   ClockIcon,
@@ -89,17 +90,19 @@ export function BlogPage() {
     if (blog) renderHTML(blog.body);
   }, [blog]);
 
-  if (isLoading) return <>Loading...</>;
-  else if (isError) return <>Error</>;
 
   return (
     <MainLayout>
       <div className="card md:w-3/4 p-4">
+
+        { isLoading && <Loading/> }
+        { isError && <>Error</> }
+
+        { blog && <>
         <h2 className="text-5xl text-center mb-4 font-semibold capitalize">
           {blog.title}
         </h2>
-
-        <div className="flex gap-4 my-3 text-sm">
+          <div className="flex gap-4 my-3 text-sm">
           {user.data?.id == blog.author?.id && !blog.approved && (
             <Badge color="red" icon={ClockIcon}>
               Pending Approval
@@ -199,6 +202,8 @@ export function BlogPage() {
         <div className="mt-8">
           <Comments blog_id={blog.id} />
         </div>
+        </> }
+
       </div>
       <div className="md:w-1/4">
         { !isLoading && !isError && (
