@@ -20,7 +20,7 @@ export default function Layout() {
       <Navbar fluid className="shadow py-4">
         <Navbar.Brand className="mr-8 font-bold text-2xl my-auto">
           <Link to="/" className="text-lg text-primary-500">
-            Toggy
+            OIPcourses
           </Link>
         </Navbar.Brand>
 

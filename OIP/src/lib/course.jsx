@@ -31,7 +31,7 @@ export function CourseSidebar (){
 				{ active !== "" && 
 					<div className="p-2 text-xs">
 						<div className="flex gap-1 flex-col">
-							{ selected.map(course => <Link className="text-underline hover:text-primary-500" to={"blogs/courses/" + course.code }>
+							{ selected.map(course => <Link className="text-underline hover:text-primary-500" to={"/blogs/courses/" + course.code }>
 								<div className="capitalize">{ course.name } (<span className="font-semibold">{course.code.toUpperCase()}</span>)</div>
 							</Link>)}
 						</div>

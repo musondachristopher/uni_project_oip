@@ -12,7 +12,7 @@ export function AuthRoutes() {
     <div className="">
       <div className="text-3xl text-center font-medium mt-4 text-primary-500"
         onClick={() => navigate("/")}
-      >Toggy</div>
+      >OIPcourses</div>
       <Outlet />
     </div>
   );

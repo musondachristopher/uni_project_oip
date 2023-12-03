@@ -80,9 +80,8 @@ export function BlogPage() {
       console.log(variables);
       if (variables == "approval") {
         queryClient.setQueryData(["blogs", params.id], data);
-      } else if (variables == "remove") {
+      } 
         navigate(-1);
-      }
     },
   });
 
@@ -144,7 +143,13 @@ export function BlogPage() {
               }
               arrowIcon={false}
             >
+              <Dropdown.Item>
+                <a href={import.meta.env.VITE_ADMIN_SITE + "/blogs/blog/" + blog.id + '/change'} target="_blank">
+                  View on admin site
+                </a>
+              </Dropdown.Item>  
               {blog.approved ? (
+
                 <Dropdown.Item
                   icon={XCircleIcon}
                   onClick={() => mutation.mutate("approval")}

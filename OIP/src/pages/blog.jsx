@@ -105,10 +105,12 @@ export function BlogList({
                 <div className="capitalize font-bold text-2xl text-gray-600 group-hover:text-primary-500">
                   {blog.title}
                 </div>
-                <div className="flex gap-2 capitalize text-sm">
+                <div className="flex gap-2 text-sm">
                   <div>
-                    <span>{blog.course?.code.toUpperCase()}</span>
-                    <span className="">{blog.course?.name}</span>
+                    <span className="mr-1">{
+                      blog.course.code.toUpperCase()
+                    }</span>
+                    <span className="capitalize">{blog.course.name}</span>
                   </div>
                   <div className="flex">
                     {Array(blog.rating)
@@ -166,8 +168,8 @@ export function BlogList({
 
 function PopularBlogs() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["popularblogs-sidebar", { size: 5 }],
-    queryFn: () => list("blogs/popular?size=5"),
+    queryKey: ["popularblogs-sidebar", { size: 4 }],
+    queryFn: () => list("blogs/popular?size=4"),
     staleTime: 3600,
   });
 
@@ -184,8 +186,8 @@ function PopularBlogs() {
 
 export function SimilarBlogs({ blog }) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["similarblogs", { id: blog.id, size: 5 }],
-    queryFn: () => list(`blogs/${blog.id}/similar?size=5`),
+    queryKey: ["similarblogs", { id: blog.id, size: 4 }],
+    queryFn: () => list(`blogs/${blog.id}/similar?size=4`),
     staleTime: 3600,
   });
 

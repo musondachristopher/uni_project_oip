@@ -53,8 +53,8 @@ export function Comments({ blog_id }) {
         comments={comments}
         isError={isError}
       />
-      <form className="grid md:grid-cols-2 grid-cols-1 gap-2 mt-8">
-        <div>
+      <form className="grid md:grid-cols-2  gap-2 mt-4">
+        <div className="w-full">
           <Label>Full name</Label>
           <TextInput
             onChange={(e) => handleChange(e)}
@@ -63,7 +63,7 @@ export function Comments({ blog_id }) {
             value={msg.full_name}
           />
         </div>
-        <div>
+        <div className="w-full">
           <Label>Email</Label>
           <TextInput
             onChange={(e) => handleChange(e)}
@@ -99,6 +99,7 @@ function CommentList({ comments , isLoading, isError }) {
 
   return (
     <div className="flex flex-col gap-1 mt-1">
+      { comments.length == 0 && (<div className="text-gray-500 text-sm text-center">No comments yet.</div>)}
       {comments.map(comment => (
         <div className="p-2 flex text-sm gap-1 items-start" key={comment.id}>
           <ChatBubbleBottomCenterTextIcon className="w-4 text-primary-500 mt-1" />
